@@ -5,6 +5,7 @@ Land Use Land Cover (LULC) classification of Hassan District using Landsat 9 and
 Landsat-9 satellite imagery
 
 ## Study Area
+Hassan, Karnataka
 Define the region of interest (ROI) used for the analysis.
 
 ## Methodology
