@@ -1,0 +1,31 @@
+Map.addLayer(hassan);
+Map.centerObject(hassan, 10);
+var L1 = ee.ImageCollection("LANDSAT/LC09/C02/T1_L2");
+var Image = L1.filterBounds(hassan)
+              .filterDate("2022-01-01","2022-12-01")
+              .filterMetadata("CLOUD_COVER","less_than",5)
+              .mean()
+              .clip(hassan);
+print(Image);
+var LULC_class = ee.FeatureCollection([vegetation,water,cropland,barrenland,builduparea]);
+
+var bands = ['SR_B1','SR_B2','SR_B3','SR_B4','SR_B5','SR_B6','SR_B7'];
+var input = Image.select(bands);
+var trainImage = Image.select(bands).sampleRegions
+({
+  collection: LULC_class,
+  properties: ['Class'],
+  scale: 60
+});
+var spectral_chart = ui.Chart.image.regions({
+  image: input,
+  regions: LULC_class,
+  reducer: ee.Reducer.mean(),
+  scale: 30,
+  seriesProperty: 'class'
+}).setOptions({
+  title: 'SPECTRAL REFLECTANCE OF HASSAN(KARNATAKA)',
+  hAxis: {title: 'Wavelength Band'},
+  vAxis: {title: 'Mean Reflectance'},
+  legend: {position: 'right'}
+});
